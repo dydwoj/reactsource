@@ -91,11 +91,6 @@
 
         3) yarn preview
             => 미리보기 (서버에 배포된 후 실행결과 보기)
-    
-    - component : 대문자로 생성 (java 처럼)
-        => 작성 : 쪼개서 구현 => jsx 라고 부름
-        => 예전엔 클래스로 구현
-        => 요즘은 함수로 구현
 
     < jsx 문법 >
         => 자바스크립트 확장 문법
@@ -136,6 +131,11 @@
         - map (foreach 같은 함수)
             참고 : react/MyComponent
             => 사용시 배열로 나옴
+                => 함수를 실행한 결과가 새로운 배열로 리턴
+
+            * map(() => {})
+                => 결과값에 {} 치는 순간 return 을 사용해야 한다
+                but. {} 없으면 return 사용 X
 
             -메서드
                 1. join() : 배열 사이에 추가할 수 있음
@@ -159,6 +159,28 @@
         - 단독태그
             ex) br 등...
             => js 에서는 단독태그 존재 X => 무조건 닫아야 한다
+
+    < component > : 대문자로 생성 (java 처럼)
+        참고 : components
+        - 예전엔 클래스로 구현
+        - 요즘은 함수로 구현
+        - 각자 따로 개발하고 하나로 모아서 내보내야 함
+            => 내보내는게 중요함!!
+        
+        * 부모가 값을 자식한테 받는 경우 X !! => 부모의 값을 자식이 받는 경우만 존재
+
+        - 작성
+            => 쪼개서 구현 => jsx 라고 부름
+
+        - 공유
+            참고 : MyApp, MyButton
+            => 공유하려면 부모가 값을 가지고 있어야 함
+            => props 개념을 사용
+
+            - 작성
+                1. 부모 : 값과 함수를 가지고 있어야 함
+                2. import 한 자식에게 값에대한 값을 던짐
+                3. 자식 : 값을 받아서 추출
         
     < props >
         참고 : 엣지/f12/components 확인, card, product 확인
@@ -188,8 +210,67 @@
                            <App name="홍길동">내용</App>
 
     < state >
-        참고 : Counter
+        참고 : Counter, InputSample, InputMultipleSample
+            => 리액트는 가상 DOM 형성
+               이벤트 발생시 가상 DOM 에 변화를 줌
+               기존 DOM 의 변경된 부분과 가상 DOM 의 값이 달라지면 기존 DOM 제거 후 가상 DOM 을 업데이트
+               지금까지의 DOM 은 달라진 부분만 변경 했음 => axios 사용 등...
+               리액트는 달라지면 전체를 변화시켜서 처음부터 저장하는 개념
+                    => 처리 속도가 일부분만 교체 보다는 새로 전부 업데이트가 빠르다
 
         - 함수
-             useState : 변수명, 함수명 => ex) const [변수명, 함수명] = useState();
-                        
+
+            < use~~~ > : hook 이라고 부름
+
+                - Rerendering (재렌더링)
+                    부모가 렌더링이 되면 자식도 같이 렌더링이 됨
+                    but. 자식이 재렌더링이 된다고 부모한테 영향 X (역으로 영향을 주지는 않음)
+
+
+                - useState() : 새로운 UI 반영
+                    => 동적으로 변화하는 변수의 상태를 확인 함
+                    => 컨포넌트 내부에서 변경될 수 있는 값으로 값이 변경될 때마다 페이지가 렌더링(rerendering) 됨
+                    => useState 가 관리하는 변수가 업데이트 된다면 가상 DOM 을 업데이트 하는 개념
+                        => 기존의 다른 변수들은 새로고침이 됨
+                    
+                    - 사용법
+                        => 변수명, 함수명
+                            => ex) const [변수명, 함수명] = useState();
+                            => ex2) const [count, setCount] = useState(0);
+                                => 숫자일시, 0 으로
+                                => count 값 변화가 일어나면 웹페이지 리렌더링(== 새로고침)
+                            => ex3) const [text, setText] = useState("")
+                                => 문자일시, 빈 문자열로
+                    
+                    - 여러개를 묶어서 사용하기
+                        useState({
+                            key1: value1
+                            key2: value2
+                        })
+                            =>
+                
+                    - useRef() : useState() 발생시, 리렌더링 될 때 렌더링과 관계없이 useRef() 값을 유지함
+                        참고 : begin/CounterRef, InputRef
+                        => rerendering 이 되어도 본인이 가지고 있는 값을 그대로 가지고 있음
+                           컨포넌트가 특정 정보를 기억해야 할 필요가 있을 때 사용
+                           스크롤바 위치, 포커스 설정, 특정 요소의 크기 가져오기 같은 DOM 선택
+
+                        * useRef 값이 변경된다면 변경된 그 값 유지
+
+                        - 기억할 요소 선택
+                            const inputText = useRef(null);
+
+                            const handleFocus = (e) => {
+                                inputText.current.focus();
+                            };
+                                => 기억할 요소 선택 : current 를 통해 접근
+
+                            return <input type="text" ref={inputText} />
+                                => 기억할 요소에 ref="" 속성 사용
+
+
+        - 동적으로 변화시키는 속성
+            1) onClick : 클릭시
+            2) onChange : 변화시
+
+    
