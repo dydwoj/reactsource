@@ -19,6 +19,13 @@ import CounterRef from "./CounterRef";
 import InputRef from "./InputRef";
 import UserProfile from "./UserProfile";
 import Form from "./Form";
+import Life from "./Life";
+import FetchBook from "./FetchBook";
+import Reducer from "./Reducer";
+import Memo from "./Memo";
+import Average from "./Average";
+import Parent from "./Parent";
+import BookList from "./BookList";
 
 function App() {
   return (
@@ -32,11 +39,16 @@ function App() {
        <Movie />
        <Say />
        <MyApp />
-       <CounterRef />
-      <InputRef />
-      <UserProfile />
-       <Card /> */}
+       <InputRef />
+       <UserProfile />
       <Form />
+      <Life />
+      <FetchBook />
+      <Memo />
+      <Average />
+      <Parent />
+      <Card /> */}
+      <BookList />
     </>
   );
 }
