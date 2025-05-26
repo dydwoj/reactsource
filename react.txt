@@ -19,6 +19,8 @@
                     => 실행 코드 : yarn add react-icons
                 3. axios
                     => 실행 코드 : yarn add axios
+                4. router
+                    => 실행 코드 : yarn add react-router-dom
 
     2) extension
         1. reactjs code snippets - charalampos karypidis
@@ -137,6 +139,7 @@
             참고 : react/MyComponent
             => 사용시 배열로 나옴
                 => 함수를 실행한 결과가 새로운 배열로 리턴
+            => key 값을 사용해야 함
 
             * map(() => {})
                 => 결과값에 {} 치는 순간 return 을 사용해야 한다
@@ -434,3 +437,142 @@
                                     => 가장 간단함
                                         but. 컨트롤러 모든 매핑들 위에 일일히 어노테이션을 달아야 함
                                 방법 2.
+
+    < 서버로 요청 보내기 >
+        참고 : todoapp/common/todoApi.js
+
+        - ajax
+            1) fetch() : 브라우저 함수 (바로 사용 가능)
+                => 기본적인(전통적인) 방식
+                => 콜백 지옥에 빠질 경우가 있음
+                => .then 2개 필수
+
+                - 방법
+                    fetch("경로", {method: "post", body: {}, headers: {} })
+                    .then(도착한 데이터 확인, 도착한 데이터를 적절한 타입으로 변환)
+                    .then(화면에 나타내기)
+
+                - 실전
+                    fetch("경로", {
+                    method: "post",
+                    body: {},
+                    headers: {
+                        "Content-Tpye": "application/json",
+                    },
+                    })
+                    .then((res) => {
+                        if (!res.ok) throw new Error("에러");
+                        return res.json;
+                    })
+                    .then((data) => {
+                        1. 화면에 보여주기
+                    });
+            
+            1-2) async / await
+                참고 : 395번째 줄
+
+                - 방법
+                    1) 선언만 한 경우
+                        const res = await fetch("경로")
+                        const data = await res.json()
+
+                    2) 함수 안에 만드는 경우 (동기식 형태처럼 비동기 함수 이용하기)
+                        const fetchData = async () => {
+                        const res = await fetch("경로");
+                        const data = await res.json();
+                        };
+
+            2) jQuery 이용 : jQuery 라이브러리 필요 (설치 필요)
+
+            3) axios 이용 : axios 라이브러리 필요 (설치 필요)
+
+                - 방법
+                    1) 선언만 한 경우
+                        axios.get("경로").then((res) => res.data);
+                        * get / post / put / delete
+                    
+                    2) 함수 안에 만드는 경우 (동기식 형태처럼 비동기 함수 이용하기)
+                        const getList = async () => {
+                        const res = await axios.get();
+                        return res.data;
+                        };
+
+    < router >
+        참고 : router
+        => 하나의 페이지로 서로다른 뷰(화면)을 보여줘야 할 때 사용
+        => 페이지 이동할 때마다 렌더링 시키기 => Link 사용
+
+        * URLSearchParams() : 브라우저 API -> 리액트 X
+            => 현재 경로를 찾을 때 사용
+            ex) const location = useLocation();
+                const queryParams = new URLSearchParams(location.search);
+                const keyword = queryParams.get("keyword");
+                    => keyword 의 값을 가져올 수 있음
+        
+        * <Outlet />
+            => 부모/자식 들의 요소를 중첩해서 띄워줌
+
+        1) main.jsx
+            App 을 <BrowserRouter> 로 감싸기
+        
+        2) jsx 단
+           <Routes>
+             <Route path="/" element={<Home />} />
+           </Routes>
+
+        - use~~ (hook)
+            
+            1) useNavigate()
+                => button 에 주로 사용
+                
+                - 방법
+                    1. 객체 선언 : const navigate = useNavigate();
+                    2. 함수 생성 : const navTo = (path) => navigate(path);
+                    3. button 요소에 onClick={() => navTo("/")} 삽입
+            
+            2) useParams()
+                참고 : Pages.jsx
+                => 주소줄 정보 가져오기
+
+                ex) http://localhost:5173/user/1 => 1 가져오기
+                const { id } = useParams();
+                    => id 값에 1이 담김
+            
+            3) useSearchParams()
+                참고 : Pages.jsx
+                => 주소줄 정보(keyword) 가져오기
+
+                ex) http://localhost:5173/search?keyword=test => keyword 가져오기
+                const [queryParams] = useSearchParams();
+                const keyword = queryParams.get("keyword");
+                    => keyword 에 value 값 담김
+                    => get("가져올 key값 입력") -> 해당하는 value 값 나옴
+
+            4) useLocation()
+                참고 : Pages.jsx
+                => 현재 경로(변경 경로)를 가져올 수 있음
+                    => location 객체 선언 후 .pathname 통해 5173 이후 경로 알아올 수 있음
+
+                    앞경로 그대로 뒷경로 바뀌는거 처리 방법
+
+        - 중첩 라우트
+            참고 : pages.jsx -> Article 함수들 확인
+
+        - 에러 페이지 만들기
+        <Route path="*" element={<Error />} />
+            => Error 함수를 별도로 생성하면 명시된 경로 외에는 해당 Error 컴포넌트가 나옴
+
+    < Context API >
+        참고 : contexts/CountContext.jsx
+        => 저장소
+        =>  React 컴포넌트 트리 안에서 전역적(global)이라고 볼 수 있는 데이터를 공유할 수 있도록 고안된 방법
+            => 가장 부모가 되는 app 에서 변경됬을때 바꿔야 할 값들이 너무 많은 경우 이용
+            => why? 유지보수 측면에서의 어려움이 있음
+
+        => 지금까지는 부모 -> 자식으로 보내는 props 를 일일히 작성하여 코드를 생성했음
+
+        * export default : 무조건 하나만 내보낸다는 뜻
+            => default 를 생략해야 여러개를 내보낼 수 있음
+            => import 시, {} 없이 인포트 하지만 여러개를 내보낸 경우 {} 통해서 export 하고 import 함
+
+        1. createContext() 생성
