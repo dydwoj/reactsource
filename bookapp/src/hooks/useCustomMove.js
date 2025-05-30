@@ -1,17 +1,25 @@
 // 페이지 나누기 (이동)
 
+import { useState } from "react";
 import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 
+const getNum = (param, defaultValue) => {
+  if (!param) return defaultValue;
+  return parseInt(param);
+};
+
 const useCustomMove = () => {
+  const [refresh, setRefresh] = useState(false);
+
   const navigate = useNavigate();
   // 쿼리스트링 가져오기
   const [queryParams] = useSearchParams();
 
   // ?page=1&size=10&keyword= 가져오기
-  const page = queryParams.get("page", 1);
-  const size = queryParams.get("size", 10);
-  const genre = queryParams.get("genre", 0);
-  const keyword = queryParams.get("keyword", "");
+  const page = getNum(queryParams.get("page"), 1);
+  const size = getNum(queryParams.get("size"), 10);
+  const genre = getNum(queryParams.get("genre"), 0);
+  const keyword = queryParams.get("keyword") || "";
 
   const queryDefault = createSearchParams({ page, size, genre, keyword }).toString();
 
