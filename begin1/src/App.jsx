@@ -26,6 +26,7 @@ import Memo from "./Memo";
 import Average from "./Average";
 import Parent from "./Parent";
 import BookList from "./BookList";
+import AdGenerator from "./AdGenerator";
 
 function App() {
   return (
@@ -48,7 +49,7 @@ function App() {
       <Average />
       <Parent />
       <Card /> */}
-      <BookList />
+      <AdGenerator />
     </>
   );
 }
